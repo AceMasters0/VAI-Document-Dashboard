@@ -10,12 +10,16 @@ import pandas as pd
 # ✅ OpenAI API Key (Replace with your actual API key)
 openai.api_key = "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"
 
-# ✅ Google Drive API Credentials
-SERVICE_ACCOUNT_FILE = "vai.json"  # Update with your path
-SCOPES = ["https://www.googleapis.com/auth/drive.readonly"]
-credentials = service_account.Credentials.from_service_account_file(
-    SERVICE_ACCOUNT_FILE, scopes=SCOPES
+import json
+import streamlit as st
+from google.oauth2 import service_account
+
+# ✅ Load Google credentials from Streamlit Secrets
+service_account_info = json.loads(st.secrets["google"]["service_account"])
+credentials = service_account.Credentials.from_service_account_info(
+    service_account_info, scopes=["https://www.googleapis.com/auth/drive.readonly"]
 )
+
 drive_service = build("drive", "v3", credentials=credentials)
 
 # ✅ Streamlit UI
