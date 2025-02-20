@@ -7,8 +7,32 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 import pandas as pd
 
-# ✅ OpenAI API Key (Replace with your actual API key)
-openai.api_key = "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"
+import openai
+import streamlit as st
+from google.oauth2 import service_account
+
+# ✅ Load OpenAI API key from Streamlit Secrets
+if "api_key" in st.secrets["openai"]:
+    openai.api_key = st.secrets["openai"]["api_key"]
+else:
+    st.error("❌ OpenAI API key is missing. Please add it to Streamlit Secrets.")
+
+# ✅ Load Google credentials from Streamlit Secrets
+credentials = service_account.Credentials.from_service_account_info(
+    {
+        "type": "service_account",
+        "project_id": st.secrets["google"]["project_id"],
+        "private_key_id": st.secrets["google"]["private_key_id"],
+        "private_key": st.secrets["google"]["private_key"],
+        "client_email": st.secrets["google"]["client_email"],
+        "client_id": st.secrets["google"]["client_id"],
+        "auth_uri": st.secrets["google"]["auth_uri"],
+        "token_uri": st.secrets["google"]["token_uri"],
+        "auth_provider_x509_cert_url": st.secrets["google"]["auth_provider_x509_cert_url"],
+        "client_x509_cert_url": st.secrets["google"]["client_x509_cert_url"],
+    },
+    scopes=["https://www.googleapis.com/auth/drive.readonly"]
+)
 
 import json
 import streamlit as st
