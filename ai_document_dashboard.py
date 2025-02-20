@@ -15,10 +15,26 @@ import streamlit as st
 from google.oauth2 import service_account
 
 # ✅ Load Google credentials from Streamlit Secrets
-service_account_info = json.loads(st.secrets["google"]["service_account"])
+import streamlit as st
+from google.oauth2 import service_account
+
+# ✅ Load Google credentials from Streamlit Secrets
 credentials = service_account.Credentials.from_service_account_info(
-    service_account_info, scopes=["https://www.googleapis.com/auth/drive.readonly"]
+    {
+        "type": "service_account",
+        "project_id": st.secrets["google"]["project_id"],
+        "private_key_id": st.secrets["google"]["private_key_id"],
+        "private_key": st.secrets["google"]["private_key"],
+        "client_email": st.secrets["google"]["client_email"],
+        "client_id": st.secrets["google"]["client_id"],
+        "auth_uri": st.secrets["google"]["auth_uri"],
+        "token_uri": st.secrets["google"]["token_uri"],
+        "auth_provider_x509_cert_url": st.secrets["google"]["auth_provider_x509_cert_url"],
+        "client_x509_cert_url": st.secrets["google"]["client_x509_cert_url"],
+    },
+    scopes=["https://www.googleapis.com/auth/drive.readonly"]
 )
+
 
 drive_service = build("drive", "v3", credentials=credentials)
 
